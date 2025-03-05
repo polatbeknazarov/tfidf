@@ -5,8 +5,8 @@
 ## Установка и запуск
 1. **Клонируйте репозиторий:**
 ```bash
-git clone https://github.com/пользователь/репозиторий.git
-cd репозиторий
+git clone https://github.com/polatbeknazarov/tfidf.git
+cd tfidf
 ```
 
 2. **Создайте виртуальное окружение и активируйте его:**
