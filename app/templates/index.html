@@ -1,0 +1,54 @@
+{% extends "base.html" %}
+
+{% block main %}
+<div class="max-w-4xl mx-auto py-8">
+    <h2 class="text-2xl font-bold mb-6 text-gray-800">Upload one or more .txt files:</h2>
+    <form action="/upload" method="post" enctype="multipart/form-data" class="flex flex-col items-center gap-4 bg-white p-6 rounded-lg shadow-md transition-all duration-300 hover:shadow-lg">
+        <input type="file" name="files" multiple accept=".txt" class="block w-full text-sm text-gray-600 file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-semibold file:bg-indigo-50 file:text-indigo-700 hover:file:bg-indigo-100 transition-colors">
+        <button type="submit" class="px-6 py-2 bg-indigo-600 text-white rounded-md shadow hover:bg-indigo-700 transition-colors">Загрузить</button>
+    </form>
+
+    {% if tfidf %}
+    <div class="mt-8">
+        <h2 class="text-2xl font-semibold mb-6 text-gray-800">TF-IDF Results:</h2>
+        <input type="text" id="search" placeholder="Search..." class="mb-4 px-4 py-2 border border-[#cccccc50] shadow-md rounded-md w-full">
+
+        <div class="overflow-x-auto shadow-md rounded-lg">
+            <table class="min-w-full bg-white border border-gray-200 rounded-lg" id="tfidf-table">
+                <thead>
+                    <tr class="bg-indigo-600 text-white">
+                        <th class="py-3 px-4 text-left font-medium cursor-pointer">Word</th>
+                        <th class="py-3 px-4 text-left font-medium cursor-pointer">TF</th>
+                        <th class="py-3 px-4 text-left font-medium cursor-pointer">IDF</th>
+                    </tr>
+                </thead>
+                <tbody class="divide-y divide-gray-200">
+                    {% for item in tfidf %}
+                    <tr class="hover:bg-indigo-50 transition-colors">
+                        <td class="py-3 px-4 text-gray-800">{{ item.word }}</td>
+                        <td class="py-3 px-4 text-gray-800">{{ "%.4f" | format(item.tf) }}</td>
+                        <td class="py-3 px-4 text-gray-800">{{ "%.4f" | format(item.idf) }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+    {% else %}
+    <p class="text-center text-gray-600 mt-8">There are no results yet.</p>
+    {% endif %}
+</div>
+
+<script>
+    const searchInput = document.getElementById('search');
+    const tableRows = document.querySelectorAll('#tfidf-table tbody tr');
+
+    searchInput.addEventListener('input', () => {
+        const query = searchInput.value.toLowerCase();
+        tableRows.forEach(row => {
+            const word = row.children[0].textContent.toLowerCase();
+            row.style.display = word.includes(query) ? '' : 'none';
+        });
+    });
+</script>
+{% endblock main %}
